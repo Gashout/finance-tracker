@@ -1,0 +1,50 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    
+    /* Path Alias Configuration */
+    /* 
+     * baseUrl: Specifies the base directory to resolve non-relative module names.
+     * Setting this to "." makes all imports resolve from the project root.
+     * This is essential for path aliases to work correctly.
+     */
+    "baseUrl": ".",
+    
+    /* 
+     * paths: Defines path mappings that will be resolved relative to baseUrl.
+     * The "@/*" pattern maps any import starting with "@/" to the "src/" directory.
+     * This creates a convenient shorthand for imports and avoids long relative paths.
+     * 
+     * Benefits of path aliases:
+     * 1. Shorter, cleaner import statements
+     * 2. Avoids "../../../" chains in deeply nested components
+     * 3. Easier refactoring - moving files doesn't break imports
+     * 4. Better organization and readability
+     * 5. Consistency across the codebase
+     */
+    "paths": {
+      "@/*": ["src/*"]
+    }
+  },
+  "include": [
+    "src"
+  ]
+}
