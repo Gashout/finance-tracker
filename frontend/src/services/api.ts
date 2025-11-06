@@ -13,6 +13,20 @@
 import axios, { InternalAxiosRequestConfig, AxiosResponse, AxiosError } from 'axios'
 
 /**
+ * @constant API_BASE_URL
+ * @description Base URL for the Django backend API
+ * 
+ * In production, this should be set via the REACT_APP_API_URL environment variable.
+ * Falls back to localhost for development if the environment variable is not set.
+ * 
+ * @environment_variables
+ * - REACT_APP_API_URL: The full base URL of your Django backend (e.g., https://api.yourdomain.com/api/)
+ * - Defaults to http://localhost:8000/api/ for local development
+ */
+// TEMP: hardcode backend API base to fix prod login until Vercel env is confirmed
+const API_BASE_URL = 'https://finance-tracker-backend-80hk.onrender.com/api/'
+
+/**
  * @constant CSRF_TOKEN_ENDPOINT
  * @description Endpoint URL for fetching CSRF tokens from Django backend
  * 
@@ -20,8 +34,10 @@ import axios, { InternalAxiosRequestConfig, AxiosResponse, AxiosError } from 'ax
  * - Sets the csrftoken cookie via @ensure_csrf_cookie decorator
  * - Returns the token value in the response body
  * - Allows unauthenticated access for password reset functionality
+ * 
+ * Constructed from API_BASE_URL to ensure consistency across environments
  */
-const CSRF_TOKEN_ENDPOINT = 'http://localhost:8000/api/auth/csrf-token/'
+const CSRF_TOKEN_ENDPOINT = `${API_BASE_URL}auth/csrf-token/`
 
 /**
  * @variable csrfTokenPromise
@@ -212,9 +228,15 @@ export const fetchCsrfTokenAndReturn = async (): Promise<{
  * 
  * @cors_configuration
  * - baseURL: Points to Django backend (must match CORS_ALLOWED_ORIGINS in Django)
+ *   Uses API_BASE_URL which can be configured via REACT_APP_API_URL environment variable
  * - withCredentials: When true, allows cookies to be sent in cross-origin requests
  *   (must be used with CORS_ALLOW_CREDENTIALS=True in Django)
  * - xsrfCookieName/xsrfHeaderName: For Django's CSRF protection with cookies
+ * 
+ * @environment_configuration
+ * - Set REACT_APP_API_URL environment variable in Vercel dashboard for production
+ * - Format: https://your-backend-domain.com/api/ (include trailing slash)
+ * - In local development, defaults to http://localhost:8000/api/
  * 
  * @error_handling
  * - If you see "Network Error" or CORS errors in console, check:
@@ -224,7 +246,7 @@ export const fetchCsrfTokenAndReturn = async (): Promise<{
  *   4. The origin is in CSRF_TRUSTED_ORIGINS for POST/PUT/DELETE requests
  */
 const api = axios.create({
-  baseURL: 'http://localhost:8000/api/',
+  baseURL: API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
   },
